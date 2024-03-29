@@ -34,8 +34,8 @@ class LeafNode(HTMLNode):
         return (
                 self.tag == other.tag
                 and self.value == other.value
-                and self.children == self.children
-                and self.props == self.props
+                and self.children == other.children
+                and self.props == other.props
         )
 
     def to_html(self):
