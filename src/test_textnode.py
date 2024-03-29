@@ -1,6 +1,7 @@
 import unittest
 
 from textnode import TextNode, text_node_to_html_node
+from htmlnode import LeafNode
 
 
 class TestTextNode(unittest.TestCase):
@@ -43,6 +44,14 @@ class TestTextNode(unittest.TestCase):
         leaf_code = text_node_to_html_node(code_text)
         leaf_link = text_node_to_html_node(link_text)
         leaf_image = text_node_to_html_node(image_text)
+
+class TestTextNodeToHTMLNode(unittest.TestCase):
+    def test_bold_text_node(self):
+        bold_text = TextNode("boom", "bold")
+        leaf_bold = text_node_to_html_node(bold_text)
+
+        leaf_bold_test = LeafNode("b", "boom")
+        self.assertEqual(leaf_bold, leaf_bold_test)
 
 if __name__ == "__main__":
     unittest.main()

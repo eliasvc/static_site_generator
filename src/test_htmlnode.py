@@ -62,6 +62,16 @@ class TestLeafNode(unittest.TestCase):
         """Test to_html without any properties"""
         node = LeafNode("p", "This is a paragraph of text.")
         self.assertEqual("<p>This is a paragraph of text.</p>", node.to_html())
+    
+    def test_eq(self):
+        node = LeafNode("p", "This is a paragraph of text.")
+        other_node = LeafNode("p", "This is a paragraph of text.")
+        self.assertEqual(node, other_node)
+        
+    def test_not_eq(self):
+        node = LeafNode("p", "This is a paragraph of text.")
+        other_node = LeafNode("p", "This is a different paragraph of text.")
+        self.assertNotEqual(node, other_node)
 
     def test_to_html_props(self):
         """Test using properties"""

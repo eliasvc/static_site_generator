@@ -30,6 +30,14 @@ class LeafNode(HTMLNode):
             raise ValueError("value required for Leaf nodes")
         super().__init__(tag, value, None, props)
 
+    def __eq__(self, other):
+        return (
+                self.tag == other.tag
+                and self.value == other.value
+                and self.children == self.children
+                and self.props == self.props
+        )
+
     def to_html(self):
         if not self.value:
             raise ValueError("no value in element")
