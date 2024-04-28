@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, text_node_to_html_node
+from textnode import TextNode, text_node_to_html_node, split_nodes_delimiter
 from htmlnode import LeafNode
 
 
@@ -73,6 +73,51 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
 
         leaf_image_test = LeafNode('img', 'boom', props={'src':'image.com', 'alt':'boom'})
         self.assertEqual(leaf_image, leaf_image_test)
+
+class TestSplitNodesDelimiter(unittest.TestCase):
+    def test_text_only(self):
+        text_only_nodes = [TextNode('This is a text only node', 'text')]
+        split_nodes = split_nodes_delimiter(text_only_nodes, '**', 'bold')
+        self.assertEqual(TextNode('This is a text only node', 'text'), split_nodes[0])
+        
+    def test_text_mixed_with_markup_word(self):
+        bold_nodes = [TextNode('Sentence with a spice of **bold** in it', 'text')]
+        result = split_nodes_delimiter(bold_nodes, '**', 'bold')
+        print(result)
+        self.assertEqual(TextNode('Sentence with a spice of', 'text'), result[0])
+        self.assertEqual(TextNode('in it', 'text'), result[1])
+        self.assertEqual(TextNode('**bold**', 'bold'), result[2])
+
+    def test_markup_only_sentence(self):
+        bold_nodes = [TextNode('**Bold sentence**', 'text')]
+        result = split_nodes_delimiter(bold_nodes, '**', 'bold')
+        print(result)
+        self.assertEqual(TextNode('**Bold sentence**', 'bold'), result[0])
+        
+    def test_markup_word(self):
+        bold_nodes = [TextNode('**Bold**', 'bold')]
+        result = split_nodes_delimiter(bold_nodes, '**', 'bold')
+        self.assertEqual(TextNode('**Bold**', 'bold'), result[0])
+ 
+    def test_incomplete_markup_sentence_beginning(self):
+        text_only_nodes = [TextNode('**This is a text only node', 'text')]
+        split_nodes = split_nodes_delimiter(text_only_nodes, '**', 'bold')
+        self.assertEqual(TextNode('**This is a text only node', 'text'), split_nodes[0])
+
+    def test_incomplete_markup_sentence_end(self):
+        text_only_nodes = [TextNode('This is a text only node**', 'text')]
+        split_nodes = split_nodes_delimiter(text_only_nodes, '**', 'bold')
+        self.assertEqual(TextNode('This is a text only node**', 'text'), split_nodes[0])
+
+    def test_incomplete_markup_word(self):
+        bold_nodes = [TextNode('**Bold', 'text')]
+        result = split_nodes_delimiter(bold_nodes, '**', 'bold')
+        self.assertEqual(TextNode('**Bold', 'text'), result[0])
+
+    def test_incomplete_markup_word_end(self):
+        bold_nodes = [TextNode('Bold**', 'text')]
+        result = split_nodes_delimiter(bold_nodes, '**', 'bold')
+        self.assertEqual(TextNode('Bold**', 'text'), result[0])
 
 if __name__ == "__main__":
     unittest.main()
