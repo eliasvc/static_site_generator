@@ -53,8 +53,8 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     regular_text_nodes = []
     delimiter_text_nodes = []
     delimiter_started = False
-    temp_delimiter_buffer = []
-    temp_text_buffer = []
+    delimter_buffer = []
+    text_buffer = []
     
     print('Old Nodes:')
     print(old_nodes)
@@ -66,52 +66,52 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 # Any regular text that came right before, if any, is ready to be converted to TextNode
                 # e.g: In "This is regular text but *this is bold*" the bold part signals the end of a
                 # text-only TextNode
-                if temp_text_buffer:
-                    regular_text_nodes.append(TextNode(' '.join(temp_text_buffer), TEXT_TYPE_TEXT))
-                    temp_text_buffer = []
+                if text_buffer:
+                    regular_text_nodes.append(TextNode(' '.join(text_buffer), TEXT_TYPE_TEXT))
+                    text_buffer = []
                 if delimiter_started:
                     # Found another starting delimiter before the previous one close
                     # Dumping the previous delimited string into text
-                    regular_text_nodes.append(TextNode(' '.join(temp_delimiter_buffer), TEXT_TYPE_TEXT))
-                    temp_delimiter_buffer = []
+                    regular_text_nodes.append(TextNode(' '.join(delimter_buffer), TEXT_TYPE_TEXT))
+                    delimter_buffer = []
             elif word.startswith(delimiter):
                 if not delimiter_started:
                     delimiter_started = True
-                    temp_delimiter_buffer.append(word)
+                    delimter_buffer.append(word)
                 else:
                     # This means a delimiter was found before the previous one closed
-                    regular_text_nodes.append(TextNode(' '.join(temp_delimiter_buffer), TEXT_TYPE_TEXT))
+                    regular_text_nodes.append(TextNode(' '.join(delimter_buffer), TEXT_TYPE_TEXT))
                     # Start the buffer over with this new word
-                    temp_delimiter_buffer = [word]
+                    delimter_buffer = [word]
             # Closing delimiter is found
             # e.g: "*this is bold*" the second asterisk is found after the first one activated delimiter_started
             elif word.endswith(delimiter) and delimiter_started:
-                temp_delimiter_buffer.append(word)
-                delimiter_text_nodes.append(TextNode(' '.join(temp_delimiter_buffer), text_type))
-                temp_delimiter_buffer = []
+                delimter_buffer.append(word)
+                delimiter_text_nodes.append(TextNode(' '.join(delimter_buffer), text_type))
+                delimter_buffer = []
                 delimiter_started = False
                 # Any regular text found before this can be converted to a TextNode
-                if temp_text_buffer:
-                    regular_text_nodes.append(TextNode(' '.join(temp_text_buffer), TEXT_TYPE_TEXT))
-                    temp_text_buffer = []
+                if text_buffer:
+                    regular_text_nodes.append(TextNode(' '.join(text_buffer), TEXT_TYPE_TEXT))
+                    text_buffer = []
             elif not word.endswith(delimiter) and delimiter_started:
                 # Just regular text but preceded by another word with an opening delimiter, which may mean it's marked up too
-                temp_delimiter_buffer.append(word)
+                delimter_buffer.append(word)
             # Regular text. No delimiter 
             elif not delimiter_started:
-                temp_text_buffer.append(word)
+                text_buffer.append(word)
 
-            print(temp_text_buffer)
-            print(temp_delimiter_buffer)
+            print(text_buffer)
+            print(delimter_buffer)
             print()
 
-        # Anything left in temp_delimiter_buffer is as string with an open delimiter that was not closed
+        # Anything left in delimter_buffer is as string with an open delimiter that was not closed
         # e.g: "Sh** is getting crazy"
-        if temp_delimiter_buffer:
-            regular_text_nodes.append(TextNode(' '.join(temp_delimiter_buffer), TEXT_TYPE_TEXT))
-        # Anything left in temp_text_buffer will also need to be turned into a text TextNode
-        if temp_text_buffer:
-            regular_text_nodes.append(TextNode(' '.join(temp_text_buffer), TEXT_TYPE_TEXT))
+        if delimter_buffer:
+            regular_text_nodes.append(TextNode(' '.join(delimter_buffer), TEXT_TYPE_TEXT))
+        # Anything left in text_buffer will also need to be turned into a text TextNode
+        if text_buffer:
+            regular_text_nodes.append(TextNode(' '.join(text_buffer), TEXT_TYPE_TEXT))
     print(regular_text_nodes)
     regular_text_nodes.extend(delimiter_text_nodes)
     return regular_text_nodes
