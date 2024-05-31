@@ -8,3 +8,12 @@ def extract_markdown_images(text):
     matches = re.findall(r"!\[(.*?)\]\((.*?)\)", text)
 
     return matches
+
+
+def extract_markdown_links(text):
+    """Parses all link markdown elements in the form [link](URL/path).
+    Returns a list of tuples, each composed of (link, URL/path) of
+    every link element found"""
+    matches = re.findall(r"\[(.*?)\]\((.*?)\)", text)
+
+    return matches
