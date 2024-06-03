@@ -13,16 +13,15 @@ def split_nodes_image(old_nodes):
         target_text = node.text
         for image in images:
             sections = target_text.split(f"![{image[0]}]({image[1]})", maxsplit=1)
-            for i in range(len(sections)):
-                if sections[i] == "":
-                    continue
-                if i % 2 == 0:
-                    new_nodes.append(
-                        textnode.TextNode(sections[i], textnode.TEXT_TYPE_TEXT)
-                    )
-                else:
-                    new_nodes.append(
-                        textnode.TextNode(image[0], textnode.TEXT_TYPE_IMAGE, image[1])
-                    )
+            if sections[0] != "":
+                new_nodes.append(
+                    textnode.TextNode(sections[0], textnode.TEXT_TYPE_TEXT)
+                )
+            if sections[1] != "":
+                target_text = sections[1]
+
+            new_nodes.append(
+                textnode.TextNode(image[0], textnode.TEXT_TYPE_IMAGE, image[1])
+            )
 
     return new_nodes
