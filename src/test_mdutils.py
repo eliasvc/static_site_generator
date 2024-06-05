@@ -45,3 +45,43 @@ class TestMDUtils(unittest.TestCase):
         output = mdutils.split_nodes_image([node])
         self.assertEqual(output, [node])
 
+    def test_split_nodes_link(self):
+        node = textnode.TextNode(
+            "This is text with an [link](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and another [second link](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png)",
+            textnode.TEXT_TYPE_TEXT,
+        )
+        new_nodes = mdutils.split_nodes_link([node])
+        expected_output = [
+            textnode.TextNode("This is text with an ", textnode.TEXT_TYPE_TEXT),
+            textnode.TextNode(
+                "link",
+                textnode.TEXT_TYPE_LINK,
+                "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png",
+            ),
+            textnode.TextNode(" and another ", textnode.TEXT_TYPE_TEXT),
+            textnode.TextNode(
+                "second link",
+                textnode.TEXT_TYPE_LINK,
+                "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png",
+            ),
+        ]
+        
+        self.assertEqual(expected_output, new_nodes)
+    
+    def test_split_nodes_link_no_text_node(self):
+        node = textnode.TextNode("", textnode.TEXT_TYPE_TEXT)
+        output = mdutils.split_nodes_link([node])
+        self.assertEqual(output, [])
+
+
+    def test_split_nodes_link_text_only(self):
+        node = textnode.TextNode(
+            "not an image element in here", textnode.TEXT_TYPE_TEXT
+        )
+        output = mdutils.split_nodes_link([node])
+        self.assertEqual(output, [])
+    
+    def test_split_nodes_link_non_textnode(self):
+        node = textnode.TextNode("", textnode.TEXT_TYPE_BOLD)
+        output = mdutils.split_nodes_link([node])
+        self.assertEqual(output, [node])

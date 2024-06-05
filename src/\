@@ -37,7 +37,7 @@ def split_nodes_image(old_nodes):
 
     return new_nodes
 
-def split_nodes_link(old_nodes):
+def split_nodes_links(old_nodes):
     """Split text attribute from nodes in old_nodes into one or more TextNodes based on the following rules:
     * [link](url) => TextNode(link, textnode.TEXT_TYPE_TEXT, url)
     * regular text => TextNode(regular text, texnode.TEXT_TYPE_TEXT)
@@ -51,14 +51,14 @@ def split_nodes_link(old_nodes):
         if node.text == "":
             continue
         links = parse.extract_markdown_links(node.text)
-        # No markdown link elements were found or had broken elements. Either way, add it as is
+        # No markdown image elements were found or had broken elements. Either way, add it as is
         if not links:
             continue
         target_text = node.text
         for link in links:
-            # Split text in two sections, one containing everything before the link element and
+            # Split text in two sections, one containing everything before the image element and
             # the other containin the rest for later processing.
-            sections = target_text.split(f"[{link[0]}]({link[1]})", maxsplit=1)
+            sections = target_text.split(f"![{link[0]}]({link[1]})", maxsplit=1)
             if sections[0] != "":
                 new_nodes.append(
                     textnode.TextNode(sections[0], textnode.TEXT_TYPE_TEXT)
@@ -67,7 +67,7 @@ def split_nodes_link(old_nodes):
                 target_text = sections[1]
 
             new_nodes.append(
-                textnode.TextNode(link[0], textnode.TEXT_TYPE_LINK, link[1])
+                textnode.TextNode(link[0], textnode.TEXT_TYPE_IMAGE, link[1])
             )
 
     return new_nodes
