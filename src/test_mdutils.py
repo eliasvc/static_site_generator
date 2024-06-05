@@ -39,3 +39,9 @@ class TestMDUtils(unittest.TestCase):
         )
         output = mdutils.split_nodes_image([node])
         self.assertEqual(output, [])
+    
+    def test_split_nodes_image_non_textnode(self):
+        node = textnode.TextNode("", textnode.TEXT_TYPE_BOLD)
+        output = mdutils.split_nodes_image([node])
+        self.assertEqual(output, [node])
+
