@@ -37,6 +37,7 @@ def split_nodes_image(old_nodes):
 
     return new_nodes
 
+
 def split_nodes_link(old_nodes):
     """Split text attribute from nodes in old_nodes into one or more TextNodes based on the following rules:
     * [link](url) => TextNode(link, textnode.TEXT_TYPE_TEXT, url)
@@ -71,3 +72,9 @@ def split_nodes_link(old_nodes):
             )
 
     return new_nodes
+
+
+def text_to_textndoes(text):
+    """Parses text and converts any markdown elments found into TextNodes with the corresponding type.
+    Returns a list of all TextNodes created"""
+    pass
