@@ -38,7 +38,7 @@ class TestMDUtils(unittest.TestCase):
             "not an image element in here", textnode.TEXT_TYPE_TEXT
         )
         output = mdutils.split_nodes_image([node])
-        self.assertEqual(output, [])
+        self.assertEqual(output, [node])
 
     def test_split_nodes_image_non_textnode(self):
         node = textnode.TextNode("", textnode.TEXT_TYPE_BOLD)
@@ -74,11 +74,9 @@ class TestMDUtils(unittest.TestCase):
         self.assertEqual(output, [])
 
     def test_split_nodes_link_text_only(self):
-        node = textnode.TextNode(
-            "not an image element in here", textnode.TEXT_TYPE_TEXT
-        )
+        node = textnode.TextNode("not a link element in here", textnode.TEXT_TYPE_TEXT)
         output = mdutils.split_nodes_link([node])
-        self.assertEqual(output, [])
+        self.assertEqual(output, [node])
 
     def test_split_nodes_link_non_textnode(self):
         node = textnode.TextNode("", textnode.TEXT_TYPE_BOLD)
@@ -104,4 +102,5 @@ class TestMDUtils(unittest.TestCase):
             textnode.TextNode("link", textnode.TEXT_TYPE_LINK, "https://boot.dev"),
         ]
         output = mdutils.text_to_textndoes(text)
+        print(output)
         self.assertCountEqual(expected_output, output)

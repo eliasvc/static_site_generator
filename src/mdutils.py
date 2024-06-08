@@ -18,6 +18,7 @@ def split_nodes_image(old_nodes):
         images = parse.extract_markdown_images(node.text)
         # No markdown image elements were found or had broken elements. Either way, add it as is
         if not images:
+            new_nodes.append(node)
             continue
         target_text = node.text
         for image in images:
@@ -54,6 +55,7 @@ def split_nodes_link(old_nodes):
         links = parse.extract_markdown_links(node.text)
         # No markdown link elements were found or had broken elements. Either way, add it as is
         if not links:
+            new_nodes.append(node)
             continue
         target_text = node.text
         for link in links:
@@ -77,4 +79,25 @@ def split_nodes_link(old_nodes):
 def text_to_textndoes(text):
     """Parses text and converts any markdown elments found into TextNodes with the corresponding type.
     Returns a list of all TextNodes created"""
-    pass
+    resulting_nodes = []
+    if not text:
+        return resulting_nodes
+    resulting_nodes.append(textnode.TextNode(text, textnode.TEXT_TYPE_TEXT))
+    markdown_delimiters = {
+        "`": textnode.TEXT_TYPE_CODE,
+        "**": textnode.TEXT_TYPE_BOLD,
+        "*": textnode.TEXT_TYPE_ITALIC,
+    }
+    for delimiter in markdown_delimiters.keys():
+        resulting_nodes = textnode.split_nodes_delimiter(
+            resulting_nodes, delimiter, markdown_delimiters[delimiter]
+        )
+    print("***before link split")
+    print(resulting_nodes)
+    resulting_nodes = split_nodes_link(resulting_nodes)
+    print("***after link split and before image split")
+    print(resulting_nodes)
+    resulting_nodes = split_nodes_image(resulting_nodes)
+    print("***after image split")
+    print(resulting_nodes)
+    return resulting_nodes
