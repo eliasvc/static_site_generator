@@ -9,6 +9,7 @@ def split_nodes_image(old_nodes):
     Nodes not of text type textnode.TEXT_TYPE_TEXT will be kept as is.
     Returns list of all nodes that splinter from old_nodes"""
     new_nodes = []
+    target_text = ""
     for node in old_nodes:
         if node.text_type != textnode.TEXT_TYPE_TEXT:
             new_nodes.append(node)
@@ -25,17 +26,20 @@ def split_nodes_image(old_nodes):
             # Split text in two sections, one containing everything before the image element and
             # the other containin the rest for later processing.
             sections = target_text.split(f"![{image[0]}]({image[1]})", maxsplit=1)
-            if sections[0] != "":
+            target_text = ""
+            if sections[0]:
                 new_nodes.append(
                     textnode.TextNode(sections[0], textnode.TEXT_TYPE_TEXT)
                 )
-            if sections[1] != "":
+            if sections[1]:
                 target_text = sections[1]
 
             new_nodes.append(
                 textnode.TextNode(image[0], textnode.TEXT_TYPE_IMAGE, image[1])
             )
-
+    # Any left-over text has to be a text_type_text TextNode
+    if target_text:
+        new_nodes.append(textnode.TextNode(target_text, textnode.TEXT_TYPE_TEXT))
     return new_nodes
 
 
@@ -46,6 +50,7 @@ def split_nodes_link(old_nodes):
     Nodes not of text type textnode.TEXT_TYPE_TEXT will be kept as is.
     Returns list of all nodes that splinter from old_nodes"""
     new_nodes = []
+    target_text = ""
     for node in old_nodes:
         if node.text_type != textnode.TEXT_TYPE_TEXT:
             new_nodes.append(node)
@@ -62,21 +67,24 @@ def split_nodes_link(old_nodes):
             # Split text in two sections, one containing everything before the link element and
             # the other containin the rest for later processing.
             sections = target_text.split(f"[{link[0]}]({link[1]})", maxsplit=1)
-            if sections[0] != "":
+            target_text = ""
+            if sections[0]:
                 new_nodes.append(
                     textnode.TextNode(sections[0], textnode.TEXT_TYPE_TEXT)
                 )
-            if sections[1] != "":
+            if sections[1]:
                 target_text = sections[1]
 
             new_nodes.append(
                 textnode.TextNode(link[0], textnode.TEXT_TYPE_LINK, link[1])
             )
-
+    # Any left-over text has to be a text_type_text TextNode
+    if target_text:
+        new_nodes.append(textnode.TextNode(target_text, textnode.TEXT_TYPE_TEXT))
     return new_nodes
 
 
-def text_to_textndoes(text):
+def text_to_textnodes(text):
     """Parses text and converts any markdown elments found into TextNodes with the corresponding type.
     Returns a list of all TextNodes created"""
     resulting_nodes = []
@@ -92,12 +100,6 @@ def text_to_textndoes(text):
         resulting_nodes = textnode.split_nodes_delimiter(
             resulting_nodes, delimiter, markdown_delimiters[delimiter]
         )
-    print("***before link split")
-    print(resulting_nodes)
     resulting_nodes = split_nodes_link(resulting_nodes)
-    print("***after link split and before image split")
-    print(resulting_nodes)
     resulting_nodes = split_nodes_image(resulting_nodes)
-    print("***after image split")
-    print(resulting_nodes)
     return resulting_nodes
