@@ -111,3 +111,24 @@ class TestMDUtils(unittest.TestCase):
         ]
         output = mdutils.text_to_textnodes("not a link element in here")
         self.assertEqual(expected_output, output)
+
+    def test_markdown_to_blocks(self):
+        markdown = (
+            "This is **bolded** paragraph\n"
+            "\n"
+            "This is another paragraph with *italic* text and `code` here\n"
+            "This is the same paragraph on a new line\n"
+            "\n"
+            "* This is a list\n"
+            "* with items\n"
+        )
+        expected_output = [
+            "This is **bolded** paragraph",
+            (
+                "This is another paragraph with *italic* text and `code` here\n"
+                "This is the same paragraph on a new line"
+            ),
+            ("* This is a list\n" "* with items"),
+        ]
+        output = mdutils.markdown_to_blocks(markdown)
+        self.assertCountEqual(expected_output, output)

@@ -31,7 +31,7 @@ class TestParse(unittest.TestCase):
         self.assertEqual(output, expected_output)
 
     def test_extract_markdown_links_empty_link(self):
-        text = "This is text with an ![]()"
+        text = "This is text with an []()"
         expected_output = [
             ("", ""),
         ]
