@@ -132,3 +132,41 @@ class TestMDUtils(unittest.TestCase):
         ]
         output = mdutils.markdown_to_blocks(markdown)
         self.assertCountEqual(expected_output, output)
+
+    def test_markdown_to_blocks_empty_string(self):
+        markdown = ""
+        expected_output = []
+        output = mdutils.markdown_to_blocks(markdown)
+
+        self.assertEqual(expected_output, output)
+
+    def test_markdown_to_blocks_consecutive_newlines(self):
+        markdown = (
+            "This is **bolded** paragraph\n"
+            "\n"
+            "\n"
+            "\n"
+            "This is another paragraph with *italic* text and `code` here\n"
+            "This is the same paragraph on a new line\n"
+            "\n"
+            "\n"
+            "* This is a list\n"
+            "* with items\n"
+        )
+        expected_output = [
+            "This is **bolded** paragraph",
+            (
+                "This is another paragraph with *italic* text and `code` here\n"
+                "This is the same paragraph on a new line"
+            ),
+            ("* This is a list\n" "* with items"),
+        ]
+        output = mdutils.markdown_to_blocks(markdown)
+        self.assertCountEqual(expected_output, output)
+
+    def test_markdown_to_blocks_no_newlines(self):
+        markdown = "Just a simple string"
+        expected_output = ["Just a simple string"]
+        output = mdutils.markdown_to_blocks(markdown)
+
+        self.assertCountEqual(expected_output, output)
