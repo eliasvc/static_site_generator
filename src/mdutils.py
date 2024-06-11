@@ -1,6 +1,13 @@
 import textnode
 import parse
 
+BLOCK_TYPE_PARAGRAPH = "paragraph"
+BLOCK_TYPE_HEADING = "heading"
+BLOCK_TYPE_CODE = "code"
+BLOCK_TYPE_QUOTE = "quote"
+BLOCK_TYPE_UNORDERED_LIST = "unordered_list"
+BLOCK_TYPE_ORDERED_LIST = "ordered_list"
+
 
 def split_nodes_image(old_nodes):
     """Split text attribute from nodes in old_nodes into one or more TextNodes based on the following rules:
@@ -109,3 +116,15 @@ def markdown_to_blocks(markdown: str) -> list:
     """Takes markdown strings and returns a list of block strings, where block strings are defined as strings separated by one
     or more blank lines"""
     return [x.strip() for x in markdown.split("\n\n") if x]
+
+
+def block_to_block_type(block):
+    """Detect the type of markdown block type. The types than can be identified are:
+    * Heading
+    * Code
+    * Quote
+    * Unordered List
+    * Ordered List
+    If non of the above match, the block is deemed as a regular paragraph"""
+
+    pass

@@ -170,3 +170,17 @@ class TestMDUtils(unittest.TestCase):
         output = mdutils.markdown_to_blocks(markdown)
 
         self.assertCountEqual(expected_output, output)
+
+    def test_block_to_block_type_headings(self):
+        blocks = [
+            "# Heading 1",
+            "## Heading 2",
+            "### Heading 3",
+            "#### Heading 4",
+            "##### Heading 5",
+            "###### Heading 6",
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_HEADING, mdutils.block_to_block_type(block)
+            )
