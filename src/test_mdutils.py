@@ -184,3 +184,64 @@ class TestMDUtils(unittest.TestCase):
             self.assertEqual(
                 mdutils.BLOCK_TYPE_HEADING, mdutils.block_to_block_type(block)
             )
+
+    def test_block_to_block_type_non_headings(self):
+        blocks = [
+            "####### 7 Headings",
+            "#NoSpaceHeading",
+            "No markdown text",
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_PARAGRAPH, mdutils.block_to_block_type(block)
+            )
+
+    def test_block_to_block_type_code(self):
+        blocks = [
+            "```code```",
+            "``` code ```",
+            "```code ```",
+            "``` code ```",
+            "```\ncode```",
+            "```code\n```",
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_CODE, mdutils.block_to_block_type(block)
+            )
+
+    def test_block_to_block_type_non_code(self):
+        blocks = [
+            "```code`````",
+            "`````code```",
+            "code```",
+            "```code",
+            "`````code`````",
+            "````code\n````",
+            "````\ncode\n````",
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_PARAGRAPH, mdutils.block_to_block_type(block)
+            )
+
+    def test_block_to_block_type_blockquote(self):
+        blocks = [
+            "> quote",
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_QUOTE, mdutils.block_to_block_type(block)
+            )
+
+    def test_block_to_block_type_non_blockquote(self):
+        blocks = [
+            ">quote",
+            "quote",
+            ">\nquote",
+            ">> quote",
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_PARAGRAPH, mdutils.block_to_block_type(block)
+            )

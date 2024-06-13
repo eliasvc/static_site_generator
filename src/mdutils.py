@@ -1,3 +1,5 @@
+import re
+
 import textnode
 import parse
 
@@ -127,4 +129,11 @@ def block_to_block_type(block):
     * Ordered List
     If non of the above match, the block is deemed as a regular paragraph"""
 
-    pass
+    if re.match(r"^#{1,6} .*", block):
+        return BLOCK_TYPE_HEADING
+    elif re.match(r"^```\s?[^`]*\s?```$", block):
+        return BLOCK_TYPE_CODE
+    elif re.match(r"^> .*", block):
+        return BLOCK_TYPE_QUOTE
+
+    return BLOCK_TYPE_PARAGRAPH
