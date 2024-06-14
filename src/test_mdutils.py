@@ -245,3 +245,50 @@ class TestMDUtils(unittest.TestCase):
             self.assertEqual(
                 mdutils.BLOCK_TYPE_PARAGRAPH, mdutils.block_to_block_type(block)
             )
+
+    def test_block_to_block_type_unordered_list(self):
+        blocks = [
+            "- One",
+            "* One",
+            ("- One\n- Two\n- Three\n- Four\n"),
+            ("* One\n* Two\n* Three\n* Four\n"),
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_UNORDERED_LIST, mdutils.block_to_block_type(block)
+            )
+
+    def test_block_to_block_type_broken_unordered_list(self):
+        blocks = [
+            "One",
+            "*One",
+            ("- One\n- Two\n- Three\n^ Four\n"),
+            ("* One\n* Two\n^ Three\n- Four\n"),
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_PARAGRAPH, mdutils.block_to_block_type(block)
+            )
+
+    def test_block_to_block_type_ordered_list(self):
+        blocks = [
+            "1. One",
+            ("1. One\n2. Two\n3. Three\n4. Four\n"),
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_ORDERED_LIST, mdutils.block_to_block_type(block)
+            )
+
+    def test_block_to_block_type_broken_ordered_list(self):
+        blocks = [
+            "One",
+            "1.One",
+            "1 One",
+            ("1. One\n2. Two\n5. Three\n4. Four\n"),
+            ("1. One\nb. Two\n3. Three\n4. Four\n"),
+        ]
+        for block in blocks:
+            self.assertEqual(
+                mdutils.BLOCK_TYPE_PARAGRAPH, mdutils.block_to_block_type(block)
+            )

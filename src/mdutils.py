@@ -122,11 +122,11 @@ def markdown_to_blocks(markdown: str) -> list:
 
 def block_to_block_type(block):
     """Detect the type of markdown block type. The types than can be identified are:
-    * Heading
-    * Code
-    * Quote
-    * Unordered List
-    * Ordered List
+    * Heading: Block starts with 1 to 6 '#' followed by a space
+    * Code: Block needs to start and end with '```'
+    * Quote: Block starts with '>' followed by a space
+    * Unordered List: All items in the list need to start with '-' or '*' followed by space
+    * Ordered List: All items numbers in the list need to be followed by a '.' and a space. They also need to start with 1 and following numbers need to be in ascending order
     If non of the above match, the block is deemed as a regular paragraph"""
 
     if re.match(r"^#{1,6} .*", block):
@@ -135,5 +135,21 @@ def block_to_block_type(block):
         return BLOCK_TYPE_CODE
     elif re.match(r"^> .*", block):
         return BLOCK_TYPE_QUOTE
-
+    elif re.match(r"^(:?-|\* )", block):
+        items = block.splitlines()
+        for item in items:
+            if not re.match(r"^(:?-|\* )", item):
+                return BLOCK_TYPE_PARAGRAPH
+        return BLOCK_TYPE_UNORDERED_LIST
+    elif re.match(r"^1\. ", block):
+        items = block.splitlines()
+        for i in range(0, len(items)):
+            m = re.match(r"^(\d+). ", items[i])
+            if not m:
+                return BLOCK_TYPE_PARAGRAPH
+            item_number = int(m.group(1))
+            # Item numbers need to be in ascending order.
+            if i + 1 != item_number:
+                return BLOCK_TYPE_PARAGRAPH
+        return BLOCK_TYPE_ORDERED_LIST
     return BLOCK_TYPE_PARAGRAPH
