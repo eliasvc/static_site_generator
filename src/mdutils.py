@@ -157,8 +157,15 @@ def block_to_block_type(block):
 
 
 def blockquote_to_HTMLNode(text: str) -> htmlnode.HTMLNode:
-    text_nodes = text_to_textnodes(text)
+    new_text = text.replace("> ", "")
+    text_nodes = text_to_textnodes(new_text)
     leaf_nodes = [textnode.text_node_to_html_node(node) for node in text_nodes]
     node = htmlnode.ParentNode("blockquote", leaf_nodes)
-    print(node.to_html())
+    return node
+
+
+def paragraph_to_HTMLNode(text: str) -> htmlnode.ParentNode:
+    text_nodes = text_to_textnodes(text)
+    leaf_nodes = [textnode.text_node_to_html_node(node) for node in text_nodes]
+    node = htmlnode.ParentNode("p", leaf_nodes)
     return node

@@ -295,7 +295,7 @@ class TestMDUtils(unittest.TestCase):
             )
 
     def test_blockquote_to_HTMLNode(self):
-        text = "Excuses are **lies**"
+        text = "> Excuses are **lies**"
         expected_node = htmlnode.ParentNode(
             "blockquote",
             [
@@ -304,5 +304,18 @@ class TestMDUtils(unittest.TestCase):
             ],
         )
         output = mdutils.blockquote_to_HTMLNode(text)
+        self.assertEqual(expected_node, output)
+        self.assertEqual(expected_node.to_html(), output.to_html())
+
+    def test_paragraph_to_HTMLNode(self):
+        text = "Excuses are **lies**"
+        expected_node = htmlnode.ParentNode(
+            "p",
+            [
+                htmlnode.LeafNode(None, "Excuses are "),
+                htmlnode.LeafNode("b", "lies"),
+            ],
+        )
+        output = mdutils.paragraph_to_HTMLNode(text)
         self.assertEqual(expected_node, output)
         self.assertEqual(expected_node.to_html(), output.to_html())
