@@ -375,3 +375,31 @@ class TestMDUtils(unittest.TestCase):
         text = "Excuses are lies"
         with self.assertRaises(ValueError):
             mdutils.headings_to_HTMLNode(text)
+
+    def test_unordered_list_to_HTMLNode(self):
+        text = "- One\n- Two\n- Three\n- Four\n"
+        expected_node = htmlnode.ParentNode(
+            "ul",
+            [
+                htmlnode.LeafNode("li", "One"),
+                htmlnode.LeafNode("li", "Two"),
+                htmlnode.LeafNode("li", "Three"),
+                htmlnode.LeafNode("li", "Four"),
+            ],
+        )
+        output = mdutils.unordered_list_to_HTMLNode(text)
+        self.assertEqual(expected_node, output)
+        self.assertEqual(expected_node.to_html(), output.to_html())
+
+    def test_ordered_list_to_HTMLNode(self):
+        text = "1. One\n2. Two\n3. Three\n4. Four\n"
+        expected_node = htmlnode.ParentNode(
+            "ol",
+            [
+                htmlnode.LeafNode("li", "One"),
+                htmlnode.LeafNode("li", "Two"),
+                htmlnode.LeafNode("li", "Three"),
+                htmlnode.LeafNode("li", "Four"),
+            ],
+        )
+        output = mdutils.ordered_list_to_HTMLNode(text)

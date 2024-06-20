@@ -181,3 +181,17 @@ def headings_to_HTMLNode(text: str) -> htmlnode.ParentNode:
     leaf_nodes = [textnode.text_node_to_html_node(node) for node in text_nodes]
     node = htmlnode.ParentNode(f"h{len(headings)}", leaf_nodes)
     return node
+
+
+def unordered_list_to_HTMLNode(text: str) -> htmlnode.ParentNode:
+    new_text = re.sub(r"(-|\*) ", "", text)
+    leaf_nodes = [htmlnode.LeafNode("li", item) for item in new_text.splitlines()]
+    node = htmlnode.ParentNode("ul", leaf_nodes)
+    return node
+
+
+def ordered_list_to_HTMLNode(text: str) -> htmlnode.ParentNode:
+    new_text = re.sub(r"^\d+. ", "", text)
+    leaf_nodes = [htmlnode.LeafNode("li", item) for item in new_text.splitlines()]
+    node = htmlnode.ParentNode("ol", leaf_nodes)
+    return node
