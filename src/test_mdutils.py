@@ -319,3 +319,60 @@ class TestMDUtils(unittest.TestCase):
         output = mdutils.paragraph_to_HTMLNode(text)
         self.assertEqual(expected_node, output)
         self.assertEqual(expected_node.to_html(), output.to_html())
+
+    def test_headings_to_HTMLNode(self):
+        headings_text = [
+            "# Excuses are lies",
+            "## Excuses are lies",
+            "### Excuses are lies",
+            "#### Excuses are lies",
+            "##### Excuses are lies",
+            "###### Excuses are lies",
+        ]
+        expected_nodes = [
+            htmlnode.ParentNode(
+                "h1",
+                [
+                    htmlnode.LeafNode(None, "Excuses are lies"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "h2",
+                [
+                    htmlnode.LeafNode(None, "Excuses are lies"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "h3",
+                [
+                    htmlnode.LeafNode(None, "Excuses are lies"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "h4",
+                [
+                    htmlnode.LeafNode(None, "Excuses are lies"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "h5",
+                [
+                    htmlnode.LeafNode(None, "Excuses are lies"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "h6",
+                [
+                    htmlnode.LeafNode(None, "Excuses are lies"),
+                ],
+            ),
+        ]
+        for i in range(0, len(headings_text)):
+            output = mdutils.headings_to_HTMLNode(headings_text[i])
+            self.assertEqual(expected_nodes[i], output)
+            self.assertEqual(expected_nodes[i].to_html(), output.to_html())
+
+    def test_headings_to_HTMLNode_no_headings(self):
+        text = "Excuses are lies"
+        with self.assertRaises(ValueError):
+            mdutils.headings_to_HTMLNode(text)

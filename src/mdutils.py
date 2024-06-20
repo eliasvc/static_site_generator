@@ -169,3 +169,18 @@ def paragraph_to_HTMLNode(text: str) -> htmlnode.ParentNode:
     leaf_nodes = [textnode.text_node_to_html_node(node) for node in text_nodes]
     node = htmlnode.ParentNode("p", leaf_nodes)
     return node
+
+
+def headings_to_HTMLNode(text: str) -> htmlnode.ParentNode:
+    m = re.match(r"(^#{1,6}) ", text)
+    if not m:
+        raise ValueError("Expected heading markdown not found")
+    headings = m.group(1)
+    print(f"**HEADINGS: {headings}")
+    no_headings_text = text.replace(f"{headings} ", "")
+    print(f"**NO HEADINGS TEXT: {no_headings_text}")
+    text_nodes = text_to_textnodes(no_headings_text)
+    leaf_nodes = [textnode.text_node_to_html_node(node) for node in text_nodes]
+    node = htmlnode.ParentNode(f"h{len(headings)}", leaf_nodes)
+    print(node)
+    return node
