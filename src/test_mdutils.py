@@ -103,7 +103,6 @@ class TestMDUtils(unittest.TestCase):
             textnode.TextNode("link", textnode.TEXT_TYPE_LINK, "https://boot.dev"),
         ]
         output = mdutils.text_to_textnodes(text)
-        print(output)
         self.assertCountEqual(expected_output, output)
 
     def test_text_to_textnodes_text_only(self):
