@@ -18,6 +18,15 @@ class HTMLNode:
     def __repr__(self):
         return f"tag: {self.tag}\nvalue: {self.value}\nchildren: {self.children}\nproperties: {self.props}"
 
+    def __eq__(self, other):
+        return (
+            isinstance(other, HTMLNode)
+            and self.tag == other.tag
+            and self.value == other.value
+            and self.children == other.children
+            and self.props == other.props
+        )
+
 
 class LeafNode(HTMLNode):
     """
@@ -32,10 +41,10 @@ class LeafNode(HTMLNode):
 
     def __eq__(self, other):
         return (
-                self.tag == other.tag
-                and self.value == other.value
-                and self.children == other.children
-                and self.props == other.props
+            self.tag == other.tag
+            and self.value == other.value
+            and self.children == other.children
+            and self.props == other.props
         )
 
     def to_html(self):

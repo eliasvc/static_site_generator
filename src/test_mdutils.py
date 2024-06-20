@@ -2,6 +2,7 @@ import unittest
 
 import mdutils
 import textnode
+import htmlnode
 
 
 class TestMDUtils(unittest.TestCase):
@@ -292,3 +293,16 @@ class TestMDUtils(unittest.TestCase):
             self.assertEqual(
                 mdutils.BLOCK_TYPE_PARAGRAPH, mdutils.block_to_block_type(block)
             )
+
+    def test_blockquote_to_HTMLNode(self):
+        text = "Excuses are **lies**"
+        expected_node = htmlnode.ParentNode(
+            "blockquote",
+            [
+                htmlnode.LeafNode(None, "Excuses are "),
+                htmlnode.LeafNode("b", "lies"),
+            ],
+        )
+        output = mdutils.blockquote_to_HTMLNode(text)
+        self.assertEqual(expected_node, output)
+        self.assertEqual(expected_node.to_html(), output.to_html())

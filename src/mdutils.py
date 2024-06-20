@@ -2,6 +2,7 @@ import re
 
 import textnode
 import parse
+import htmlnode
 
 BLOCK_TYPE_PARAGRAPH = "paragraph"
 BLOCK_TYPE_HEADING = "heading"
@@ -153,3 +154,11 @@ def block_to_block_type(block):
                 return BLOCK_TYPE_PARAGRAPH
         return BLOCK_TYPE_ORDERED_LIST
     return BLOCK_TYPE_PARAGRAPH
+
+
+def blockquote_to_HTMLNode(text: str) -> htmlnode.HTMLNode:
+    text_nodes = text_to_textnodes(text)
+    leaf_nodes = [textnode.text_node_to_html_node(node) for node in text_nodes]
+    node = htmlnode.ParentNode("blockquote", leaf_nodes)
+    print(node.to_html())
+    return node
