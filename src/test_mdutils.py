@@ -403,3 +403,43 @@ class TestMDUtils(unittest.TestCase):
             ],
         )
         output = mdutils.ordered_list_to_HTMLNode(text)
+        self.assertEqual(expected_node, output)
+        self.assertEqual(expected_node.to_html(), output.to_html())
+
+    def test_code_to_HTMLNode(self):
+        code_texts = [
+            "```code```",
+            "```\ncode```",
+            "```code\n```",
+            "```\ncode\n```",
+        ]
+        expected_node = [
+            htmlnode.ParentNode(
+                "code",
+                [
+                    htmlnode.LeafNode("pre", "code"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "code",
+                [
+                    htmlnode.LeafNode("pre", "\ncode"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "code",
+                [
+                    htmlnode.LeafNode("pre", "code\n"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "code",
+                [
+                    htmlnode.LeafNode("pre", "\ncode\n"),
+                ],
+            ),
+        ]
+        for i in range(0, len(code_texts)):
+            output = mdutils.code_to_HTMLNode(code_texts[i])
+            self.assertEqual(expected_node[i], output)
+            self.assertEqual(expected_node[i].to_html(), output.to_html())

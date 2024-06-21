@@ -191,7 +191,14 @@ def unordered_list_to_HTMLNode(text: str) -> htmlnode.ParentNode:
 
 
 def ordered_list_to_HTMLNode(text: str) -> htmlnode.ParentNode:
-    new_text = re.sub(r"^\d+. ", "", text)
+    new_text = re.sub(r"\d+\. ", "", text)
     leaf_nodes = [htmlnode.LeafNode("li", item) for item in new_text.splitlines()]
     node = htmlnode.ParentNode("ol", leaf_nodes)
+    return node
+
+
+def code_to_HTMLNode(text: str) -> htmlnode.ParentNode:
+    new_text = re.sub(r"```", "", text)
+    leaf_node = htmlnode.LeafNode("pre", new_text)
+    node = htmlnode.ParentNode("code", [leaf_node])
     return node
