@@ -31,10 +31,33 @@ def generate_page(from_path: str, template_path: str, dest_path: str):
         destination.write(template)
 
 
+def generate_pages_recursive(
+    dir_path_content: str, template_path: str, dest_dir_path: str
+):
+    for file in os.listdir(dir_path_content):
+        print(file)
+        if os.path.isfile(os.path.join(dir_path_content, file)):
+            name, extension = os.path.splitext(file)
+            print(name, extension)
+            if extension == ".md":
+                print(name)
+                generate_page(
+                    os.path.join(dir_path_content, file),
+                    template_path,
+                    os.path.join(dest_dir_path, name + ".html"),
+                )
+        if os.path.isdir(os.path.join(dir_path_content, file)):
+            generate_pages_recursive(
+                os.path.join(dir_path_content, file),
+                template_path,
+                os.path.join(dest_dir_path, file),
+            )
+
+
 def main():
     shutil.rmtree("public")
     copy("static", "public")
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 
 if __name__ == "__main__":
