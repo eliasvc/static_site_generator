@@ -512,3 +512,14 @@ class TestMDUtils(unittest.TestCase):
         expected_node = htmlnode.ParentNode("div", expected_child_nodes)
         output = mdutils.markdown_to_HTMLNode(markdown)
         self.assertEqual(expected_node, output)
+
+    def test_extract_title(self):
+        markdown = "# Hola Mundo\nHeading above"
+        expected_output = "Hola Mundo"
+        output = mdutils.extract_title(markdown)
+        self.assertEqual(expected_output, output)
+
+    def test_extract_title_no_heading(self):
+        markdown = "Hola Mundo\nHeading missing"
+        with self.assertRaises(ValueError):
+            mdutils.extract_title(markdown)

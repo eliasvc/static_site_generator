@@ -225,3 +225,10 @@ def markdown_to_HTMLNode(markdown: str) -> htmlnode.ParentNode:
             child_nodes.append(unordered_list_to_HTMLNode(block))
 
     return htmlnode.ParentNode("div", child_nodes)
+
+
+def extract_title(markdown):
+    m = re.match(r"^# (.*)", markdown)
+    if not m:
+        raise ValueError("Markdown document without h1 header")
+    return m.group(1)
