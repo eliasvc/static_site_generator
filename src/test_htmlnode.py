@@ -49,7 +49,7 @@ class TestParentNode(unittest.TestCase):
 
         self.assertEqual(
             node.to_html(),
-            "<p>><b>Bold text</b>Normal text<i>italic text</i>Normal text<p>><b>Inside Bold text</b><i>Inside italic text</i></p></p>",
+            "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text<p><b>Inside Bold text</b><i>Inside italic text</i></p></p>",
         )
 
     def test_no_children(self):
@@ -57,17 +57,18 @@ class TestParentNode(unittest.TestCase):
         with self.assertRaises(ValueError):
             node.to_html()
 
+
 class TestLeafNode(unittest.TestCase):
     def test_to_html_no_props(self):
         """Test to_html without any properties"""
         node = LeafNode("p", "This is a paragraph of text.")
         self.assertEqual("<p>This is a paragraph of text.</p>", node.to_html())
-    
+
     def test_eq(self):
         node = LeafNode("p", "This is a paragraph of text.")
         other_node = LeafNode("p", "This is a paragraph of text.")
         self.assertEqual(node, other_node)
-        
+
     def test_not_eq(self):
         node = LeafNode("p", "This is a paragraph of text.")
         other_node = LeafNode("p", "This is a different paragraph of text.")
@@ -85,6 +86,7 @@ class TestLeafNode(unittest.TestCase):
         with self.assertRaises(ValueError):
             node = LeafNode("p")
             node.to_html()
+
 
 if __name__ == "__main__":
     unittest.main()
