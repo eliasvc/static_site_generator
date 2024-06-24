@@ -202,3 +202,26 @@ def code_to_HTMLNode(text: str) -> htmlnode.ParentNode:
     leaf_node = htmlnode.LeafNode("pre", new_text)
     node = htmlnode.ParentNode("code", [leaf_node])
     return node
+
+
+def markdown_to_HTMLNode(markdown: str) -> htmlnode.ParentNode:
+    child_nodes = []
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        type = block_to_block_type(block)
+        if type == BLOCK_TYPE_CODE:
+            child_nodes.append(code_to_HTMLNode(block))
+        elif type == BLOCK_TYPE_PARAGRAPH:
+            child_nodes.append(paragraph_to_HTMLNode(block))
+        elif type == BLOCK_TYPE_CODE:
+            child_nodes.append(code_to_HTMLNode(block))
+        elif type == BLOCK_TYPE_HEADING:
+            child_nodes.append(headings_to_HTMLNode(block))
+        elif type == BLOCK_TYPE_ORDERED_LIST:
+            child_nodes.append(ordered_list_to_HTMLNode(block))
+        elif type == BLOCK_TYPE_QUOTE:
+            child_nodes.append(blockquote_to_HTMLNode(block))
+        elif type == BLOCK_TYPE_UNORDERED_LIST:
+            child_nodes.append(unordered_list_to_HTMLNode(block))
+
+    return htmlnode.ParentNode("div", child_nodes)

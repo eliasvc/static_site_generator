@@ -443,3 +443,72 @@ class TestMDUtils(unittest.TestCase):
             output = mdutils.code_to_HTMLNode(code_texts[i])
             self.assertEqual(expected_node[i], output)
             self.assertEqual(expected_node[i].to_html(), output.to_html())
+
+    def test_markdown_to_html_node(self):
+        markdown = (
+            "# Testing markdown to html\n"
+            "\n"
+            "This is **bolded** paragraph\n"
+            "\n"
+            "This is another paragraph\n"
+            "\n"
+            "\n"
+            "* This is a list\n"
+            "* with items\n"
+            "\n"
+            "```CODING```\n"
+            "\n"
+            "> Excuses are lies\n"
+            "\n"
+            "1. Get good\n"
+            "2. Get a new job\n"
+            "3. Profit\n"
+        )
+        expected_child_nodes = [
+            htmlnode.ParentNode(
+                "h1", [htmlnode.LeafNode(None, "Testing markdown to html")]
+            ),
+            htmlnode.ParentNode(
+                "p",
+                [
+                    htmlnode.LeafNode(None, "This is "),
+                    htmlnode.LeafNode("b", "bolded"),
+                    htmlnode.LeafNode(None, " paragraph"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "p",
+                [htmlnode.LeafNode(None, "This is another paragraph")],
+            ),
+            htmlnode.ParentNode(
+                "ul",
+                [
+                    htmlnode.LeafNode("li", "This is a list"),
+                    htmlnode.LeafNode("li", "with items"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "code",
+                [
+                    htmlnode.LeafNode("pre", "CODING"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "blockquote",
+                [
+                    htmlnode.LeafNode(None, "Excuses are lies"),
+                ],
+            ),
+            htmlnode.ParentNode(
+                "ol",
+                [
+                    htmlnode.LeafNode("li", "Get good"),
+                    htmlnode.LeafNode("li", "Get a new job"),
+                    htmlnode.LeafNode("li", "Profit"),
+                ],
+            ),
+        ]
+
+        expected_node = htmlnode.ParentNode("div", expected_child_nodes)
+        output = mdutils.markdown_to_HTMLNode(markdown)
+        self.assertEqual(expected_node, output)
